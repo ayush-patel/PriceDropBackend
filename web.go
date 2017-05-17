@@ -140,9 +140,9 @@ func main() {
 	}
 
 	server := &http.Server{
-		Addr:    port,
+		Addr:    ":" + port,
 		Handler: r,
 	}
-	log.Println("Listening on" + port)
+	log.Println("Listening on " + port)
 	server.ListenAndServe()
 }
