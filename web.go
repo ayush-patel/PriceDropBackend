@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -133,10 +134,15 @@ func main() {
 	r.HandleFunc("/api/items", PostURLHandler).Methods("POST")
 	// r.HandleFunc("/api/notes/{id}", PutURLHandler).Methods("PUT")
 	// r.HandleFunc("/api/notes/{id}", DeleteItemHandler).Methods("DELETE")
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
 	server := &http.Server{
-		Addr:    ":8080",
+		Addr:    port,
 		Handler: r,
 	}
-	log.Println("Listening...")
+	log.Println("Listening on" + port)
 	server.ListenAndServe()
 }
