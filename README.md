@@ -4,7 +4,9 @@ A repository to host Heruko backend code to support the Price Drop iOS App at ht
 ----
 
 REST API details:
+
 :8080/api/items  | POST  |  send the URL (in JSON) to fetch the details and save as a new product 
+
 :8080/api/items  | GET  |  get the details of all the items saved  
 
 ----
