@@ -9,7 +9,7 @@ def priceFetch(url):
         price = BeautifulSoup(webpage.text, 'html5lib').body.find("div", class_= 'current-price').text
         return price[1:]
     except:
-        return "Error: Couldn't fetch the price"
+        return "Error"
 
 if __name__ == "__main__":
     print priceFetch("")
