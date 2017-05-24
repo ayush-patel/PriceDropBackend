@@ -6,24 +6,25 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"sync"
 
 	"github.com/gorilla/mux"
 	"github.com/user/PriceDropBackend/packages/scraper"
 )
 
 //Item as the basic data structure
-type Item struct {
-	Name          string  `json:"title"`
-	Brand         string  `json:"description"`
-	URL           string  `json:"url"`
-	ImageURL      string  `json:"imageurl"`
-	ID            int     `json:"id"`
-	OriginalPrice float64 `json:"originalprice"`
-	CurrentPrice  float64 `json:"currentprice"`
-}
+// type Item struct {
+// 	Name          string  `json:"title"`
+// 	Brand         string  `json:"description"`
+// 	URL           string  `json:"url"`
+// 	ImageURL      string  `json:"imageurl"`
+// 	ID            int     `json:"id"`
+// 	OriginalPrice float64 `json:"originalprice"`
+// 	CurrentPrice  float64 `json:"currentprice"`
+// }
 
 //Use a map as a temporary database
-var itemStore = make(map[string]Item)
+var itemStore = make(map[string]scraper.Item)
 
 //Variable to generate key for the collection
 var id int
@@ -31,7 +32,7 @@ var id int
 //PostURLHandler /api/items
 func PostURLHandler(w http.ResponseWriter, r *http.Request) {
 
-	var item Item
+	var item scraper.Item
 	// Decode the incoming Note json
 	err := json.NewDecoder(r.Body).Decode(&item)
 	if err != nil {
@@ -42,22 +43,6 @@ func PostURLHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-
-	// //Use a python scraper to get price at the posted URL
-	// cmd := exec.Command("python", "-c", "import priceFetch; print priceFetch.priceFetch('"+item.URL+"')")
-	// fetchedPriceBytes, err := cmd.CombinedOutput()
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fetchedPrice := strings.TrimSpace(string(fetchedPriceBytes[:]))
-	// if fetchedPrice == "Error" {
-	// 	panic(err)
-	// }
-	//
-	// price, err := strconv.ParseFloat(fetchedPrice, 64)
-	// if err != nil {
-	// 	panic(err)
-	// }
 
 	id++
 	item.ID = id //not a good implementation, but works for demo
@@ -81,10 +66,20 @@ func PostURLHandler(w http.ResponseWriter, r *http.Request) {
 
 //GetItemsHandler - /api/items
 func GetItemsHandler(w http.ResponseWriter, r *http.Request) {
-	var items []Item
+	//waitgroup to wait for the goroutines to get over when fetching prices
+	var wg sync.WaitGroup
+
+	var items []scraper.Item
+	for _, v := range itemStore {
+		wg.Add(1)
+		go scraper.FetchPrice(&wg, &v)
+	}
+
+	wg.Wait() //wait for the goroutines to update prices before appending them
 	for _, v := range itemStore {
 		items = append(items, v)
 	}
+
 	w.Header().Set("Content-Type", "application/json")
 	j, err := json.Marshal(items)
 	if err != nil {
@@ -136,6 +131,7 @@ func main() {
 	r := mux.NewRouter().StrictSlash(false)
 	r.HandleFunc("/api/items", GetItemsHandler).Methods("GET")
 	r.HandleFunc("/api/items", PostURLHandler).Methods("POST")
+	r.PathPrefix("/websites/nordstrom/").Handler(http.StripPrefix("/websites/nordstrom/", http.FileServer(http.Dir("./websites/nordstrom/"))))
 	// r.HandleFunc("/api/notes/{id}", PutURLHandler).Methods("PUT")
 	// r.HandleFunc("/api/notes/{id}", DeleteItemHandler).Methods("DELETE")
 	port := os.Getenv("PORT")
