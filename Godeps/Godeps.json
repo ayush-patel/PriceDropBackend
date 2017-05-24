@@ -4,9 +4,26 @@
 	"GodepVersion": "v79",
 	"Deps": [
 		{
+			"ImportPath": "github.com/PuerkitoBio/goquery",
+			"Comment": "v1.1.0-5-g2dc9389",
+			"Rev": "2dc93891ab3bcc1dbc2cbf9bc6376c37f6e6f289"
+		},
+		{
+			"ImportPath": "github.com/andybalholm/cascadia",
+			"Rev": "349dd0209470eabd9514242c688c403c0926d266"
+		},
+		{
 			"ImportPath": "github.com/gorilla/mux",
 			"Comment": "v1.3.0-6-g4c1c395",
 			"Rev": "4c1c3952b7d9d0a061a3fa7b36fd373ba0398ebc"
+		},
+		{
+			"ImportPath": "golang.org/x/net/html",
+			"Rev": "d8bd24be361e108270fbf56e4c25e443453a3a15"
+		},
+		{
+			"ImportPath": "golang.org/x/net/html/atom",
+			"Rev": "d8bd24be361e108270fbf56e4c25e443453a3a15"
 		}
 	]
 }

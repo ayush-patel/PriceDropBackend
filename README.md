@@ -22,9 +22,10 @@ Body:
 
 Response:
 {
-"title": "Name 1",
-"description": "Brand 1",
+"title": "Gemini Link Tote",
+"description": "Nordstrom",
 "url": "http://shop.nordstrom.com/s/tory-burch-gemini-link-tote/4490562?origin=category-personalizedsort&fashioncolor",
+"imageurl": "http://n.nordstrommedia.com/ImageGallery/store/product/Zoom/0/_13480640.jpg?crop=pad&pad_color=FFF&format=jpeg&trim=color&trimcolor=FFF&w=60&h=90",
 "id": 1,
 "originalprice": 195,
 "currentprice": 195
@@ -38,17 +39,19 @@ Headers: Content-Type:application/json
 Response:
 [
 {
-"title": "Name 1",
-"description": "Brand 1",
+"title": "Gemini Link Tote",
+"description": "Nordstrom",
 "url": "http://shop.nordstrom.com/s/tory-burch-gemini-link-tote/4490562?origin=category-personalizedsort&fashioncolor",
+"imageurl": "http://n.nordstrommedia.com/ImageGallery/store/product/Zoom/0/_13480640.jpg?crop=pad&pad_color=FFF&format=jpeg&trim=color&trimcolor=FFF&w=60&h=90",
 "id": 1,
 "originalprice": 195,
 "currentprice": 195
 },
 {
-"title": "Name 2",
-"description": "Brand 2",
+"title": "Gemini Link Tote",
+"description": "Nordstrom",
 "url": "http://shop.nordstrom.com/s/tory-burch-gemini-link-tote/4490562?origin=category-personalizedsort&fashioncolor",
+"imageurl": "http://n.nordstrommedia.com/ImageGallery/store/product/Zoom/0/_13480640.jpg?crop=pad&pad_color=FFF&format=jpeg&trim=color&trimcolor=FFF&w=60&h=90",
 "id": 2,
 "originalprice": 195,
 "currentprice": 195

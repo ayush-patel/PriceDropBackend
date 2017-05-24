@@ -5,11 +5,10 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/exec"
 	"strconv"
-	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/user/PriceDropBackend/packages/scraper"
 )
 
 //Item as the basic data structure
@@ -17,6 +16,7 @@ type Item struct {
 	Name          string  `json:"title"`
 	Brand         string  `json:"description"`
 	URL           string  `json:"url"`
+	ImageURL      string  `json:"imageurl"`
 	ID            int     `json:"id"`
 	OriginalPrice float64 `json:"originalprice"`
 	CurrentPrice  float64 `json:"currentprice"`
@@ -38,38 +38,42 @@ func PostURLHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	//Use a python scraper to get price at the posted URL
-	cmd := exec.Command("python", "-c", "import priceFetch; print priceFetch.priceFetch('"+item.URL+"')")
-	fetchedPriceBytes, err := cmd.CombinedOutput()
+	brand, name, price, imageURL, err := scraper.Scrape(item.URL)
 	if err != nil {
-		panic(err)
-	}
-	fetchedPrice := strings.TrimSpace(string(fetchedPriceBytes[:]))
-	if fetchedPrice == "Error" {
 		panic(err)
 	}
 
-	price, err := strconv.ParseFloat(fetchedPrice, 64)
-	if err != nil {
-		panic(err)
-	}
+	// //Use a python scraper to get price at the posted URL
+	// cmd := exec.Command("python", "-c", "import priceFetch; print priceFetch.priceFetch('"+item.URL+"')")
+	// fetchedPriceBytes, err := cmd.CombinedOutput()
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fetchedPrice := strings.TrimSpace(string(fetchedPriceBytes[:]))
+	// if fetchedPrice == "Error" {
+	// 	panic(err)
+	// }
+	//
+	// price, err := strconv.ParseFloat(fetchedPrice, 64)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 	id++
 	item.ID = id //not a good implementation, but works for demo
-	idString := strconv.Itoa(item.ID)
-
 	item.CurrentPrice = price
 	item.OriginalPrice = price
+	item.Name = name
+	item.Brand = brand
+	item.ImageURL = imageURL
 
-	item.Name = "Name " + idString   //TODO: update it
-	item.Brand = "Brand " + idString //TODO: update it
-
-	itemStore[idString] = item
+	itemStore[strconv.Itoa(item.ID)] = item
 
 	j, err := json.Marshal(item)
 	if err != nil {
 		panic(err)
 	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	w.Write(j)
