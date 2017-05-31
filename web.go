@@ -27,7 +27,20 @@ import (
 var itemStore = make(map[string]scraper.Item)
 
 //Variable to generate key for the collection
-var id int
+var id int = 1
+
+var itemTemp scraper.Item
+
+func dataGenerator() {
+	itemTemp.ID = 0
+	itemTemp.CurrentPrice = 495
+	itemTemp.OriginalPrice = 495
+	itemTemp.Name = "Windsor Blazer"
+	itemTemp.Brand = "Nordstrom"
+	itemTemp.URL = "http://shop.nordstrom.com/s/rag-bone-windsor-blazer/4214264?origin=category-personalizedsort&fashioncolor=BLACK"
+	itemTemp.ImageURL = "http://n.nordstrommedia.com/ImageGallery/store/product/Zoom/2/_12023002.jpg?crop=pad&pad_color=FFF&format=jpeg&w=60&h=90"
+	itemStore["0"] = itemTemp
+}
 
 //PostURLHandler /api/items
 func PostURLHandler(w http.ResponseWriter, r *http.Request) {
@@ -128,6 +141,9 @@ func GetItemsHandler(w http.ResponseWriter, r *http.Request) {
 
 //Entry point of the program
 func main() {
+
+	dataGenerator()
+
 	r := mux.NewRouter().StrictSlash(false)
 	r.HandleFunc("/api/items", GetItemsHandler).Methods("GET")
 	r.HandleFunc("/api/items", PostURLHandler).Methods("POST")
