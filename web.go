@@ -27,7 +27,7 @@ import (
 var itemStore = make(map[string]scraper.Item)
 
 //Variable to generate key for the collection
-var id int = 1
+var id int = 6
 
 var itemTemp scraper.Item
 
@@ -76,6 +76,12 @@ func PostURLHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	w.Write(j)
+}
+
+func updatePrice(w http.ResponseWriter, r *http.Request) {
+	var item scraper.Item = itemStore["6"]
+	item.CurrentPrice = item.OriginalPrice - 10
+	itemStore["6"] = item
 }
 
 //GetItemsHandler - /api/items
@@ -153,6 +159,7 @@ func main() {
 	r := mux.NewRouter().StrictSlash(false)
 	r.HandleFunc("/api/items", GetItemsHandler).Methods("GET")
 	r.HandleFunc("/api/items", PostURLHandler).Methods("POST")
+	r.HandleFunc("/update", updatePrice).Methods("GET")
 	r.PathPrefix("/websites/nordstrom/").Handler(http.StripPrefix("/websites/nordstrom/", http.FileServer(http.Dir("./websites/nordstrom/"))))
 	// r.HandleFunc("/api/notes/{id}", PutURLHandler).Methods("PUT")
 	// r.HandleFunc("/api/notes/{id}", DeleteItemHandler).Methods("DELETE")
