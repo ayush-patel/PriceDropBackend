@@ -27,7 +27,7 @@ import (
 var itemStore = make(map[string]scraper.Item)
 
 //Variable to generate key for the collection
-var id int = 6
+var id int = 5
 
 var itemTemp scraper.Item
 
