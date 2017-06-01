@@ -31,15 +31,16 @@ var id int = 1
 
 var itemTemp scraper.Item
 
-func dataGenerator() {
-	itemTemp.ID = 0
-	itemTemp.CurrentPrice = 495
-	itemTemp.OriginalPrice = 495
-	itemTemp.Name = "Windsor Blazer"
-	itemTemp.Brand = "Nordstrom"
-	itemTemp.URL = "http://shop.nordstrom.com/s/rag-bone-windsor-blazer/4214264?origin=category-personalizedsort&fashioncolor=BLACK"
-	itemTemp.ImageURL = "http://n.nordstrommedia.com/ImageGallery/store/product/Zoom/2/_12023002.jpg?crop=pad&pad_color=FFF&format=jpeg&w=60&h=90"
-	itemStore["0"] = itemTemp
+func dataGenerator(id int, name string, brand string, oprice float64, cprice float64, url string, iurl string) {
+	itemTemp.ID = id
+	itemTemp.Name = name
+	itemTemp.Brand = brand
+	itemTemp.OriginalPrice = oprice
+	itemTemp.CurrentPrice = cprice
+	itemTemp.URL = url
+	itemTemp.ImageURL = iurl
+
+	itemStore[strconv.Itoa(itemTemp.ID)] = itemTemp
 }
 
 //PostURLHandler /api/items
@@ -142,7 +143,12 @@ func GetItemsHandler(w http.ResponseWriter, r *http.Request) {
 //Entry point of the program
 func main() {
 
-	dataGenerator()
+	dataGenerator(0, "Impulse High Waist Midi Leggings", "Nordstrom", 65, 65, "http://shop.nordstrom.com/s/zella-impulse-high-waist-midi-leggings/4400095?origin=category-personalizedsort&fashioncolor=WHITE", "http://n.nordstrommedia.com/ImageGallery/store/product/Zoom/12/_100523132.jpg?crop=pad&pad_color=FFF&format=jpeg&w=60&h=90")
+	dataGenerator(1, "Teagen Sneaker", "Nordstrom", 89.95, 89.95, "http://shop.nordstrom.com/s/halogen-teagen-sneaker-women/4528050?origin=category-personalizedsort&fashioncolor=BLACK%20LEATHER%20PERF", "http://n.nordstrommedia.com/ImageGallery/store/product/Zoom/4/_100715004.jpg?crop=pad&pad_color=FFF&format=jpeg&trim=color&trimcolor=FFF&w=60&h=90")
+	dataGenerator(2, "Windsor Blazer", "Nordstrom", 495, 495, "http://shop.nordstrom.com/s/rag-bone-windsor-blazer/4214264?origin=category-personalizedsort&fashioncolor=BLACK", "http://n.nordstrommedia.com/ImageGallery/store/product/Zoom/2/_12023002.jpg?crop=pad&pad_color=FFF&format=jpeg&w=60&h=90")
+	dataGenerator(3, "Gemini Link Tote", "Nordstrom", 195, 195, "http://shop.nordstrom.com/s/tory-burch-gemini-link-tote/4490562?origin=category-personalizedsort&fashioncolor", "http://n.nordstrommedia.com/ImageGallery/store/product/Zoom/0/_13480640.jpg?crop=pad&pad_color=FFF&format=jpeg&trim=color&trimcolor=FFF&w=60&h=90")
+	dataGenerator(4, "Cover-Up Tunic", "Nordstrom", 62, 62, "http://shop.nordstrom.com/s/surf-gypsy-cover-up-tunic/4607134?origin=category-personalizedsort&fashioncolor=WHITE%2F%20CORAL%2F%20BLUE", "http://n.nordstrommedia.com/ImageGallery/store/product/Zoom/19/_100920639.jpg?crop=pad&pad_color=FFF&format=jpeg&w=60&h=90")
+	dataGenerator(5, "'Leo' Envelope Clutch", "Nordstrom", 95, 95, "http://shop.nordstrom.com/s/rebecca-minkoff-leo-envelope-clutch/3853690?origin=category-personalizedsort&fashioncolor=OPTIC%20WHITE", "http://n.nordstrommedia.com/ImageGallery/store/product/Zoom/12/_100287932.jpg?crop=pad&pad_color=FFF&format=jpeg&trim=color&trimcolor=FFF&w=60&h=90")
 
 	r := mux.NewRouter().StrictSlash(false)
 	r.HandleFunc("/api/items", GetItemsHandler).Methods("GET")
